@@ -7,16 +7,15 @@ if { $argc<2 } {
 }
 
 spawn telnet $host
-expect "Password:"
-send "$password\r"
-expect "*>"
-send "en\r"
-expect "Password:"
-send "$password\r"
-expect "*#"
-send "show run\r"
-#打开日志功能
+expect {
+    "Password:" {send "$password\r"}
+    "*>" {send "en\r"}
+    "Password:" {send "$password\r"}
+    "*#" {send "show run\r"}
+}
+
 log_file $host.log
+
 while (1) {
     sleep 1
     expect {
