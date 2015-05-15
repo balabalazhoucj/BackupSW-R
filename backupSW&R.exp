@@ -1,0 +1,28 @@
+#!/usr/bin/expect
+set host [lindex $argv 0]
+set password [lindex $argv 1]
+if { $argc<2 } {
+    send_user "usage: $argv0 <host_ip> <password>\n"
+    exit
+}
+
+spawn telnet $host
+expect "Password:"
+send "$password\r"
+expect "*>"
+send "en\r"
+expect "Password:"
+send "$password\r"
+expect "*#"
+send "show run\r"
+#打开日志功能
+log_file $host.log
+while (1) {
+    sleep 1
+    expect {
+            "*--More--" {send " "}
+            "*#" { break }
+    }
+}
+send "exit\r"
+expect eof
