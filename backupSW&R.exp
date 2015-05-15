@@ -5,7 +5,8 @@ if { $argc<2 } {
     send_user "usage: $argv0 <host_ip> <password>\n"
     exit
 }
-
+#日志清除
+send "cat /dev/null > $host.log\r"
 spawn telnet $host
 expect "Password:"
 send "$password\r"
